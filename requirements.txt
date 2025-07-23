@@ -1,0 +1,4 @@
+fastapi==0.116
+uvicorn==0.35
+swisseph==2.10.3
+pandas==2.2

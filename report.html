@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>星盘报告</title>
+  <style>body{font-family:Arial;margin:2rem;background:#fafafa}pre{background:#fff;padding:1rem;border-radius:4px;overflow-x:auto}</style>
+</head>
+<body>
+  <h1>星盘报告</h1>
+  <div id="natal"></div>
+  <div id="transit"></div>
+  <div id="aspects"></div>
+  <div id="interpretations"></div>
+
+  <script>
+    async function fetchReport() {
+      const f = new FormData(document.getElementById('form'));
+      const params = new URLSearchParams();
+      params.set('year', f.get('year').split('-')[0]);
+      params.set('month', f.get('year').split('-')[1]);
+      params.set('day', f.get('year').split('-')[2]);
+      params.set('hour', f.get('time').split(':')[0]);
+      params.set('minute', f.get('time').split(':')[1]);
+      params.set('lat', f.get('lat'));
+      params.set('lon', f.get('lon'));
+      params.set('tyear', f.get('tyear').split('-')[0]);
+      params.set('tmonth', f.get('tyear').split('-')[1]);
+      params.set('tday', f.get('tyear').split('-')[2]);
+      params.set('thour', f.get('ttime').split(':')[0]);
+      params.set('tminute', f.get('ttime').split(':')[1]);
+
+      const res = await fetch('/api/full_report', {method:'POST', body:params});
+      const data = await res.json();
+      document.getElementById('natal').innerHTML = `本命盘：<pre>${JSON.stringify(data.natal,null,2)}</pre>`;
+      document.getElementById('transit').innerHTML = `行运盘：<pre>${JSON.stringify(data.transit,null,2)}</pre>`;
+      document.getElementById('aspects').innerHTML = `相位：<pre>${JSON.stringify(data.aspects,null,2)}</pre>`;
+      document.getElementById('interpretations').innerHTML = `解释：<pre>${data.interpretations.join
